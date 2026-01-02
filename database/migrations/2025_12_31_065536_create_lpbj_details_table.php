@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('cost_center');
             $table->string('order');
             $table->string('information');
-            $table->string('image')->nullable();
+            $table->string('item_photo')->nullable();
             
             $table->timestamps();
         });
