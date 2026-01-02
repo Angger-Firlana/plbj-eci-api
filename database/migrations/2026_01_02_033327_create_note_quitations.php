@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('note_quitations', function (Blueprint $table) {
+        Schema::create('note_quotations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('quitation_id')->constrained('quitations');
+            $table->foreignId('quotation_id')->constrained('quotations');
             $table->text('note');
             $table->timestamps();
         });
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('note_quitations');
+        Schema::dropIfExists('note_quotations');
     }
 };

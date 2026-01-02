@@ -11,17 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quotations', function (Blueprint $table) {
+        Schema::create('approvals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('lpbj_id')->constrained('lpbjs');
-            $table->string('quotation_number');
-            $table->date('quotation_date');
-            $table->string('pr_no');
-            $table->string('description');
-            $table->string('frenco');
-            $table->string('pkp');
+            $table->foreignId('document_type_id')->constrained('document_types')->onDelete('cascade');  
+            $table->morphs('document');
+            $table->foreignId('approver_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            
+            $table->timestamp('approved_at')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quotations');
+        Schema::dropIfExists('approvals');
     }
 };

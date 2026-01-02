@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quitation_details', function (Blueprint $table) {
+        Schema::create('quotation_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('quitation_id')->constrained('quitations');
-            $table->foreigId('item_id')->constrained('lpbj_items');
+            $table->foreignId('quotation_id')->constrained('quotations');
+            $table->foreignId('item_id')->constrained('lpbj_items');
             $table->integer('quantity');
             $table->decimal('price', 15, 2);
             $table->string('remarks')->nullable();
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quitation_details');
+        Schema::dropIfExists('quotation_details');
     }
 };

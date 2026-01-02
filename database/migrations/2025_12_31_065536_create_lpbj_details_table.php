@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('lpbj_id')->constrained('lpbjs');
             $table->string('media');
-            $table->strin('name');
+            $table->string('name');
             $table->integer('quantity');
-            $table->article('string');
+            $table->string('article');
             $table->foreignId('store_id')->constrained('stores');
             $table->string('general_ledger');
             $table->string('cost_center');
