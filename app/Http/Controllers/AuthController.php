@@ -28,6 +28,7 @@ class AuthController extends Controller
             ],
         ], 200);
     }
+    
     public function register(RegisterRequest $request){
         //
         try{
@@ -35,6 +36,10 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'pin' => $request->pin,
+                'token' => $request->token,
+                'is_active' => true,
+                'role_id' => $request->role_id
             ]);
 
             $token = $user->createToken("Register Token");
