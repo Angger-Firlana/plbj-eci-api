@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('lpbj_number')->unique();
             $table->foreignId('department_id')->constrained('departments');
             $table->date('request_date');
+            $table->enum('status', ['pending', 'submitted', 'approved', 'rejected'])->default('pending');
             
             $table->foreignId('store_id')->constrained('stores');
             $table->timestamps();

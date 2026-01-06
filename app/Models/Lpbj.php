@@ -35,6 +35,7 @@ class Lpbj extends Model
 	protected $table = 'lpbjs';
 
 	protected $casts = [
+		'title' => 'string',
 		'request_by' => 'int',
 		'lpbj_number' => 'int',
 		'department_id' => 'int',
@@ -43,6 +44,7 @@ class Lpbj extends Model
 	];
 
 	protected $fillable = [
+		'title',
 		'request_by',
 		'lpbj_number',
 		'department_id',
