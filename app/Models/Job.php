@@ -43,8 +43,5 @@ class Job extends Model
 		'available_at'
 	];
 
-	public function positions()
-	{
-		return $this->hasMany(Position::class);
-	}
+			
 }

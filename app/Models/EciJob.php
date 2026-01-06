@@ -42,6 +42,11 @@ class EciJob extends Model
 		'head_count'
 	];
 
+	public function positions()
+	{
+		return $this->hasMany(Position::class);
+	}
+	
 	public function department()
 	{
 		return $this->belongsTo(Department::class);
