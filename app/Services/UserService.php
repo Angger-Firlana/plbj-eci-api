@@ -11,10 +11,10 @@ class UserService
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role_id' => $data['role_id']
+            'pin' => $data['pin'],
+            'role_id' => $data['role_id'],
+            'profile_photo' => $data['profile_photo_path'] ?? null
         ]);
-        
-        
         
         return $user;
     }
