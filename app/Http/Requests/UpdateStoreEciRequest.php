@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateStoreEciRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            //
+            'store_code' => 'sometimes|string',
+            'name' => 'sometimes|string',
+            'address' => 'sometimes|string',
+            'city' => 'sometimes|string',
+            'phone' => 'sometimes|string',
+            'email' => 'sometimes|string|email',
+            'is_active' => 'sometimes|integer',
+
+        ];
+    }
+}

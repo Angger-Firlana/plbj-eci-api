@@ -14,6 +14,15 @@ Route::prefix('/auth')->group(function () {
     Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
 });
 
+Route::prefix('/stores')->group(function () {
+    // Store routes will go here
+    Route::get('/', [\App\Http\Controllers\StoreController::class, 'index']);
+    Route::post('/', [\App\Http\Controllers\StoreController::class, 'store']);
+    Route::get('/{id}', [\App\Http\Controllers\StoreController::class, 'show']);
+    Route::put('/{id}', [\App\Http\Controllers\StoreController::class, 'update']);
+    Route::delete('/{id}', [\App\Http\Controllers\StoreController::class, 'destroy']);
+});
+
 Route::prefix('/lpbjs')->group(function () {
     // LPBJ routes will go here
     Route::get('/', [LpbjController::class, 'index']);
