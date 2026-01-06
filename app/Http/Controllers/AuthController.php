@@ -7,8 +7,16 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Services\AuthService;
 class AuthController extends Controller
 {
+    protected $authService;
+    
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+    
     //
     public function Login(LoginRequest $request){
         //
@@ -32,26 +40,13 @@ class AuthController extends Controller
     public function register(RegisterRequest $request){
         //
         try{
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'pin' => $request->pin,
-                'token' => $request->token,
-                'is_active' => true,
-                'role_id' => $request->role_id
-            ]);
-
-            $token = $user->createToken("Register Token");
-
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'user' => $user,
-                    'token' => $token->plainTextToken,
-                ],
-            ], 201);
-
+           $user = $this->authService->Register($request->validated());
+           return response()->json([
+            'success' => true,
+            'data' => [
+                'user' => $user,
+            ],
+        ], 201);
         }catch (\Exception $e) {
             return response()->json(['message' => 'Registration failed', 'error' => $e->getMessage()], 500);
         }

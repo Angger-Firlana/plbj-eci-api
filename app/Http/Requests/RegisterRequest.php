@@ -27,6 +27,10 @@ class RegisterRequest extends FormRequest
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed|required_with:password_confirmation',
             'password_confirmation' => 'required|string|min:8',
+            'pin' => 'required|string|min:6|max:6',
+            'is_active' => 'required|boolean',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'role_id'=> 'required|exists:roles,id'
         ];
     }
 }
