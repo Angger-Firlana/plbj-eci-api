@@ -20,21 +20,27 @@ class AuthController extends Controller
     //
     public function Login(LoginRequest $request){
         //
-        $user = User::where('email', $request['input'])->orWhere('name', $request['input'])->first();
+        try{
+            $data = $this->authService->Login($request->validated());
 
-        if(!$user || !Hash::check($request['password'], $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            if($data['code'] !== 200) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Login failed',
+                    'error' => $data['message'] ?? 'Unknown error',
+                ], $data['code']);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    $data
+                ],
+            ], 200);
+        }catch(\Exception $e) {
+            return response()->json(['message' => 'Login failed', 'error' => $e->getMessage()], 500);
         }
-
-        $token = $user->createToken("Login Token");
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'user' => $user,
-                'token' => $token->plainTextToken,
-            ],
-        ], 200);
+        
     }
     
     public function register(RegisterRequest $request){
