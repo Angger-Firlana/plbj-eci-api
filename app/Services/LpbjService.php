@@ -6,6 +6,21 @@ use App\Models\Lpbj;
 
 class LpbjService
 {
+    public function show($id):array{
+        $lpbj = Lpbj::with('lpbj_items', 'department', 'user')->find($id);
+        if(!$lpbj){
+            return [
+                'data' => null,
+                'message' => 'LPBJ not found',
+                'code' => 404,
+            ];
+        }
+        return [
+            'data' => $lpbj,
+            'message' => 'LPBJ found',
+            'code' => 200,
+        ];
+    }
     public function store(array $data): array
     {
         $lpbj = Lpbj::create([

@@ -18,4 +18,7 @@ Route::prefix('/lpbjs')->group(function () {
     // LPBJ routes will go here
     Route::get('/', [LpbjController::class, 'index']);
     Route::post('/', [LpbjController::class, 'store']);
+    Route::get('/{id}', [LpbjController::class, 'show']);
+    Route::put('/{id}', [LpbjController::class, 'update']);
+    Route::delete('/{id}', [LpbjController::class, 'destroy']);
 });

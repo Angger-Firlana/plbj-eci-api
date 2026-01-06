@@ -26,7 +26,7 @@ class UpdateLpbjRequest extends FormRequest
             'title' => 'sometimes|string|max:255',
             'request_by' => 'sometimes|exists:users,id',
             'lpbj_number' => 'sometimes|integer',
-            'department_id' => 'sometimes|exists:department,id',
+            'department_id' => 'sometimes|exists:departments,id',
             'request_date' => 'sometimes|date',
             'store_id' => 'sometimes|exists:stores,id',
             'items' => 'sometimes|array',

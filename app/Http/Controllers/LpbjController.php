@@ -41,11 +41,28 @@ class LpbjController extends Controller
         }
         
     }
+
+    public function show($id){
+        try{
+            $data = $this->lpbjService->show($id);
+            if(!($data['code'] >= 200 && $data['code'] < 300)){
+                return response()->json([
+                    'message' => $data['message']
+                ], $data['code']);
+            }
+            return response()->json($lpbj);
+        }catch(\Exception $ex){
+            return response()->json([
+                'message' => $ex->getMessage(),
+                'code' => 500
+            ], 500);
+        }
+    }
     
     public function update(UpdateLpbjRequest $request, $id){        
         try{
             DB::beginTransaction();
-            $lpbj = $this->lpbjService->update($id, $request->all());
+            $lpbj = $this->lpbjService->update($request->all(), $id);
             DB::commit();
             return response()->json($lpbj);
         }catch(\Exception $ex){
