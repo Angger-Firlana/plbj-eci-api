@@ -14,6 +14,16 @@ Route::prefix('/auth')->group(function () {
     Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
 });
 
+
+Route::prefix('/departments')->group(function () {
+    // Department routes will go here
+    Route::get('/', [\App\Http\Controllers\DepartmentController::class, 'index']);
+    Route::post('/', [\App\Http\Controllers\DepartmentController::class, 'store']);
+    Route::get('/{id}', [\App\Http\Controllers\DepartmentController::class, 'show']);
+    Route::put('/{id}', [\App\Http\Controllers\DepartmentController::class, 'update']);
+    Route::delete('/{id}', [\App\Http\Controllers\DepartmentController::class, 'destroy']);
+});
+
 Route::prefix('/stores')->group(function () {
     // Store routes will go here
     Route::get('/', [\App\Http\Controllers\StoreController::class, 'index']);
