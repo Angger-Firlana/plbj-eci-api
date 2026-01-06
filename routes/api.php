@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LpbjController;
+use App\Http\Controllers\EciJobController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -40,4 +41,12 @@ Route::prefix('/lpbjs')->group(function () {
     Route::get('/{id}', [LpbjController::class, 'show']);
     Route::put('/{id}', [LpbjController::class, 'update']);
     Route::delete('/{id}', [LpbjController::class, 'destroy']);
+});
+
+Route::prefix('/jobs')->group(function (){
+    Route::get('/', [EciJobController::class, 'index']);
+    Route::post('/', [EciJobController::class, 'store']);
+    Route::get('/{id}', [EciJobController::class, 'show']);
+    Route::put('/{id}', [EciJobController::class, 'update']);
+    Route::delete('/{id}', [EciJobController::class, 'destroy']);
 });

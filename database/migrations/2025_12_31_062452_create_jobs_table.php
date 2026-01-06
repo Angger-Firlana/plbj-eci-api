@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('eci_jobs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('department_id')->constrained('departments');
+            $table->foreignId('department_id')->constrained('departments')->nullable();
             $table->foreignId('job_level_id')->constrained('job_levels');
             $table->string('name');
             $table->integer('head_count');
