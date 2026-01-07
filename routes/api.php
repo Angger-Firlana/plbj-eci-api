@@ -85,3 +85,11 @@ Route::prefix('/users')->group(function (){
     Route::put('/{id}', [UserController::class, 'update']);
     Route::delete('/{id}', [UserController::class, 'destroy']);
 });
+
+Route::prefix('/purchased-orders')->group(function (){
+    Route::get('/', [\App\Http\Controllers\PurchasedOrderController::class, 'index']);
+    Route::post('/', [\App\Http\Controllers\PurchasedOrderController::class, 'store']);
+    Route::get('/{id}', [\App\Http\Controllers\PurchasedOrderController::class, 'show']);
+    Route::put('/{id}', [\App\Http\Controllers\PurchasedOrderController::class, 'update']);
+    Route::delete('/{id}', [\App\Http\Controllers\PurchasedOrderController::class, 'destroy']);
+});
