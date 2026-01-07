@@ -62,7 +62,7 @@ class PurchasedOrderService
         DB::beginTransaction();
         try {
             $purchasedOrder = PurchasedOrder::create([
-                'quotation_id' => $data['quotation_id'],
+                'quotation_id' => $data['quotation_id'] ?? null,
                 'vendor_id' => $data['vendor_id'],
                 'purchased_order_number' => $data['purchased_order_number'],
                 'purchased_order_date' => $data['purchased_order_date'],

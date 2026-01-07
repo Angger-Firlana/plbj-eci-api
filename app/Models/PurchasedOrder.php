@@ -14,24 +14,20 @@ use Illuminate\Database\Eloquent\Model;
  * Class PurchasedOrder
  * 
  * @property int $id
- * @property int $quotation_id
- * @property int $store_id
- * @property string $vendor_id
- * @property string $number_po
- * @property string $term
- * @property string $model
- * @property string $cost
- * @property string $note
- * @property Carbon $date
+ * @property int|null $quotation_id
+ * @property int $vendor_id
+ * @property string $purchased_order_number
+ * @property Carbon $purchased_order_date
  * @property Carbon $delivery_date
  * @property string $status
- * @property Carbon $expired_date
+ * @property string|null $notes
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * 
  * @property Quotation $quotation
- * @property Store $store
+ * @property Vendor $vendor
  * @property Collection|PurchasedOrderDetail[] $purchased_order_details
+ * @property Collection|Approval[] $approvals
  *
  * @package App\Models
  */
@@ -41,25 +37,19 @@ class PurchasedOrder extends Model
 
 	protected $casts = [
 		'quotation_id' => 'int',
-		'store_id' => 'int',
-		'date' => 'datetime',
-		'delivery_date' => 'datetime',
-		'expired_date' => 'datetime'
+		'vendor_id' => 'int',
+		'purchased_order_date' => 'datetime',
+		'delivery_date' => 'datetime'
 	];
 
 	protected $fillable = [
 		'quotation_id',
-		'store_id',
 		'vendor_id',
-		'number_po',
-		'term',
-		'model',
-		'cost',
-		'note',
-		'date',
+		'purchased_order_number',
+		'purchased_order_date',
 		'delivery_date',
 		'status',
-		'expired_date'
+		'notes'
 	];
 
 	public function quotation()
@@ -67,9 +57,9 @@ class PurchasedOrder extends Model
 		return $this->belongsTo(Quotation::class);
 	}
 
-	public function store()
+	public function vendor()
 	{
-		return $this->belongsTo(Store::class);
+		return $this->belongsTo(Vendor::class);
 	}
 
 	public function purchased_order_details()

@@ -13,18 +13,13 @@ return new class extends Migration
     {
         Schema::create('purchased_orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('quotation_id')->constrained('quotations');
-            $table->foreignId('store_id')->constrained('stores')->onDelete('cascade');
-            $table->string('vendor_id')->constrained('vendors');
-            $table->string('number_po');
-            $table->string('term');
-            $table->string('model');
-            $table->string('cost');
-            $table->string('note');
-            $table->date('date');
+            $table->foreignId('quotation_id')->nullable()->constrained('quotations')->onDelete('cascade');
+            $table->foreignId('vendor_id')->constrained('vendors');
+            $table->string('purchased_order_number')->unique();
+            $table->date('purchased_order_date');
             $table->date('delivery_date');
             $table->enum('status', ['pending', 'approved', 'rejected', 'completed'])->default('pending');
-            $table->date('expired_date');
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

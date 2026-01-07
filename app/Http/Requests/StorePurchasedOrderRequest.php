@@ -22,7 +22,7 @@ class StorePurchasedOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'quotation_id' => 'required|exists:quotations,id',
+            'quotation_id' => 'nullable|exists:quotations,id',
             'vendor_id' => 'required|exists:vendors,id',
             'purchased_order_number' => 'required|string|max:255|unique:purchased_orders,purchased_order_number',
             'purchased_order_date' => 'required|date',
