@@ -153,12 +153,27 @@ class LpbjService
         ]);
 
         $this->updateItems($data['items'], $lpbj);
+        
+        if(isset($data['approvals'])) {
+            $this->updateApprovals($data['approvals'], $lpbj);
+        }
 
         return [
             'data' => $lpbj,
             'message' => 'LPBJ updated successfully',
             'code' => 200
         ];
+    }
+
+    public function updateApprovals(array $data, $lpbj): void
+    {
+        foreach($data as $approval) {
+            $lpbj->approvals()->updateOrCreate([
+                'approver_id' => $approval['approver_id']
+            ], [
+                'status' => $approval['status']
+            ]);
+        }
     }
 
     /**

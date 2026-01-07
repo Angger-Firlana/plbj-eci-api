@@ -41,7 +41,9 @@ class UpdateLpbjRequest extends FormRequest
             'items.*.information' => 'sometimes|string',
             'items.*.item_photo' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'items.*.detail_item' => 'sometimes|array',
-            'items.*.detail_item.*.detail' => 'sometimes|string'
+            'items.*.detail_item.*.detail' => 'sometimes|string',
+            'items.*.approvals' => 'sometimes|array',
+            'items.*.approvals.*.approver_id' => 'sometimes|exists:users,id',
         ];
     }
 }
