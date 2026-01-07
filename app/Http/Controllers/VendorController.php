@@ -41,7 +41,7 @@ class VendorController extends Controller
         }
 
         return response()->json(
-            $data['data'],
+            $data,
             $data['code']
         );
     }
@@ -56,7 +56,7 @@ class VendorController extends Controller
         }
 
         return response()->json(
-            $data['data'],
+            $data,
             $data['code']
         );
     }
@@ -71,7 +71,7 @@ class VendorController extends Controller
         }
 
         return response()->json(
-            $data['data'],
+            $data,
             $data['code']
         );
     }
@@ -86,7 +86,7 @@ class VendorController extends Controller
         }
 
         return response()->json(
-            $data['data'],
+            $data,
             $data['code']
         );
     }

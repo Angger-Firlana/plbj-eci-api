@@ -49,7 +49,7 @@ class VendorService
         ];
     }
     
-    public function store(array $data):array{
+    public function create(array $data):array{
         $vendor = Vendor::create([
             'name' => $data['name'],
             'address' => $data['address'],
