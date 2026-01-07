@@ -124,6 +124,39 @@ Registers a new user.
     }
     ```
 
+### `GET /api/user`
+
+Retrieves the authenticated user's information.
+
+**Authentication:**
+
+Requires a valid Sanctum token.
+
+**Responses:**
+
+*   **200 OK (Success)**
+    ```json
+    {
+        "id": 1,
+        "name": "Test User",
+        "email": "test@example.com",
+        "email_verified_at": null,
+        "created_at": "2026-01-07T12:00:00.000000Z",
+        "updated_at": "2026-01-07T12:00:00.000000Z",
+        "is_active": 1,
+        "pin": "123456",
+        "profile_photo": null,
+        "role_id": 1
+    }
+    ```
+
+*   **401 Unauthorized**
+    ```json
+    {
+        "message": "Unauthenticated."
+    }
+    ```
+
 ---
 
 ## Departments
@@ -312,6 +345,38 @@ Retrieves a paginated list of stores.
 | `page`  | integer | 1       | The page number to retrieve. |
 | `limit` | integer | 10      | The number of items per page.|
 
+### `GET /api/stores/{id}`
+Retrieves a specific store by its ID.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Store found",
+      "code": 200,
+      "data": {
+          "id": 1,
+          "store_code": "S-001",
+          "name": "Main Store",
+          "address": "123 Main St",
+          "city": "Anytown",
+          "phone": "123-456-7890",
+          "email": "main@store.com",
+          "is_active": 1,
+          "created_at": "2026-01-07T12:00:00.000000Z",
+          "updated_at": "2026-01-07T12:00:00.000000Z"
+      }
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Store not found",
+      "code": 404
+  }
+  ```
+
 ### `POST /api/stores`
 Creates a new store.
 
@@ -330,7 +395,18 @@ Creates a new store.
 * **201 Created (Success)**
   ```json
   {
-      "data": { ...store object... },
+      "data": {
+          "store_code": "S-002",
+          "name": "New Store",
+          "address": "456 Oak Ave",
+          "city": "Othertown",
+          "phone": "987-654-3210",
+          "email": "new@store.com",
+          "is_active": "1",
+          "updated_at": "2026-01-07T12:00:00.000000Z",
+          "created_at": "2026-01-07T12:00:00.000000Z",
+          "id": 2
+      },
       "message": "Store created successfully",
       "code": 201
   }
@@ -350,15 +426,90 @@ Updates a store.
 | `email`      | string  | sometimes, email         |
 | `is_active`  | integer | sometimes, integer       |
 
+### `DELETE /api/stores/{id}`
+Deletes a store.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Store deleted successfully",
+      "code": 200
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Store not found",
+      "code": 404
+  }
+  ```
+
 ---
 
 ## LPBJ
+
+### `GET /api/lpbjs`
+Retrieves a paginated list of LPBJs.
+
+**Query Parameters:**
+| Field   | Type    | Default | Description                  |
+|---------|---------|---------|------------------------------|
+| `page`  | integer | 1       | The page number to retrieve. |
+| `limit` | integer | 10      | The number of items per page.|
+
+### `GET /api/lpbjs/{id}`
+Retrieves a specific LPBJ by its ID.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "LPBJ found",
+      "code": 200,
+      "data": {
+          "id": 1,
+          "title": "Equipment Request",
+          "request_by": 1,
+          "lpbj_number": 12345,
+          "department_id": 1,
+          "request_date": "2026-01-07",
+          "store_id": 1,
+          "created_at": "2026-01-07T12:00:00.000000Z",
+          "updated_at": "2026-01-07T12:00:00.000000Z",
+          "items": [
+              {
+                  "id": 1,
+                  "lpbj_id": 1,
+                  "name": "Laptop",
+                  "quantity": 2,
+                  "media": "Unit",
+                  "article": "LP-01",
+                  "store_id": 1,
+                  "general_ledger": "GL-100",
+                  "cost_center": "CC-200",
+                  "order": "ORD-300",
+                  "information": "For new developers",
+                  "item_photo": "item_photos/xxxxxxxx.jpg"
+              }
+          ]
+      }
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "LPBJ not found",
+      "code": 404
+  }
+  ```
 
 ### `POST /api/lpbjs`
 Creates a new LPBJ with associated items.
 
 **Request Body:**
-*Note: Validation is handled in the service layer, not via a FormRequest.*
 ```json
 {
     "title": "New Equipment Request",
@@ -377,7 +528,8 @@ Creates a new LPBJ with associated items.
             "general_ledger": "GL-100",
             "cost_center": "CC-200",
             "order": "ORD-300",
-            "information": "For new developers"
+            "information": "For new developers",
+            "item_photo": "(file)"
         }
     ]
 }
@@ -401,12 +553,61 @@ Fields are optional. To update items, include the `items` array. To update an ex
 }
 ```
 
+### `DELETE /api/lpbjs/{id}`
+Deletes a LPBJ.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "LPBJ deleted successfully",
+      "code": 200
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "LPBJ not found",
+      "code": 404
+  }
+  ```
+
 ---
 
 ## Jobs
 
 ### `GET /api/jobs`
 Retrieves a paginated list of jobs.
+
+### `GET /api/jobs/{id}`
+Retrieves a specific job by its ID.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Job found",
+      "code": 200,
+      "data": {
+          "id": 1,
+          "department_id": 1,
+          "job_level_id": 2,
+          "name": "Senior Developer",
+          "head_count": 5,
+          "created_at": "2026-01-07T12:00:00.000000Z",
+          "updated_at": "2026-01-07T12:00:00.000000Z"
+      }
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Job not found",
+      "code": 404
+  }
+  ```
 
 ### `POST /api/jobs`
 Creates a new job.
@@ -430,9 +631,59 @@ Updates a job.
 | `name`         | string  | sometimes, string                   |
 | `head_count`   | integer | sometimes, integer                  |
 
+### `DELETE /api/jobs/{id}`
+Deletes a job.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Job deleted successfully",
+      "code": 200
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Job not found",
+      "code": 404
+  }
+  ```
+
 ---
 
 ## Positions
+
+### `GET /api/positions`
+Retrieves a paginated list of positions.
+
+### `GET /api/positions/{id}`
+Retrieves a specific position by its ID.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Position found",
+      "code": 200,
+      "data": {
+          "id": 1,
+          "eci_job_id": 1,
+          "user_id": 1,
+          "created_at": "2026-01-07T12:00:00.000000Z",
+          "updated_at": "2026-01-07T12:00:00.000000Z"
+      }
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Position not found",
+      "code": 404
+  }
+  ```
 
 ### `POST /api/positions`
 Assigns a job to a user, creating a position.
@@ -452,9 +703,63 @@ Updates a position.
 | `eci_job_id` | integer | sometimes, exists:eci_jobs,id |
 | `user_id`    | integer | sometimes, exists:users,id    |
 
+### `DELETE /api/positions/{id}`
+Deletes a position.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Position deleted successfully",
+      "code": 200
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Position not found",
+      "code": 404
+  }
+  ```
+
 ---
 
 ## Vendors
+
+### `GET /api/vendors`
+Retrieves a paginated list of vendors.
+
+### `GET /api/vendors/{id}`
+Retrieves a specific vendor by its ID.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Vendor found",
+      "code": 200,
+      "data": {
+          "id": 1,
+          "name": "Supplier A",
+          "address": "456 Supplier Ave",
+          "phone": "321-654-9870",
+          "email": "supplier.a@example.com",
+          "to_vendor": "Attention: Sales",
+          "contact_person": "John Doe",
+          "created_at": "2026-01-07T12:00:00.000000Z",
+          "updated_at": "2026-01-07T12:00:00.000000Z"
+      }
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Vendor not found",
+      "code": 404
+  }
+  ```
 
 ### `POST /api/vendors`
 Creates a new vendor.
@@ -482,4 +787,215 @@ Updates a vendor.
 | `to_vendor`      | string | sometimes, string |
 | `contact_person` | string | sometimes, string |
 
+### `DELETE /api/vendors/{id}`
+Deletes a vendor.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Vendor deleted successfully",
+      "code": 200
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Vendor not found",
+      "code": 404
+  }
+  ```
+
+---
+## Quotations
+
+### `GET /api/quotations`
+Retrieves a paginated list of quotations.
+
+**Query Parameters:**
+
+| Field   | Type    | Default | Description                  |
+|---------|---------|---------|------------------------------|
+| `page`  | integer | 1       | The page number to retrieve. |
+| `limit` | integer | 10      | The number of items per page.|
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "current_page": 1,
+      "data": [
+          {
+              "id": 1,
+              "lpbj_id": 1,
+              "quotation_number": "Q-123",
+              "quotation_date": "2026-01-07",
+              "created_at": "2026-01-07T12:00:00.000000Z",
+              "updated_at": "2026-01-07T12:00:00.000000Z"
+          }
+      ],
+      "first_page_url": "/api/quotations?page=1",
+      "from": 1,
+      "next_page_url": "/api/quotations?page=2",
+      "path": "/api/quotations",
+      "per_page": 10,
+      "prev_page_url": null,
+      "to": 10
+  }
+  ```
+
+### `GET /api/quotations/{id}`
+Retrieves a specific quotation by its ID.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Quotation found",
+      "code": 200,
+      "data": {
+          "id": 1,
+          "lpbj_id": 1,
+          "quotation_number": "Q-123"
+      }
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Quotation not found",
+      "code": 404
+  }
+  ```
+
+### `POST /api/quotations`
+Creates a new quotation.
+
+**Request Body:**
+```json
+{
+    "lpbj_id": 1,
+    "quotation_number": "Q-123",
+    "quotation_date": "2026-01-07",
+    "pr_no": "PR-001",
+    "description": "Quotation for new equipment",
+    "frenco": "Franco",
+    "pkp": "PKP",
+    "quotation_details": [
+        {
+            "item_id": 1,
+            "quantity": 2,
+            "price": 1500,
+            "total_price": 3000,
+            "remarks": "High-performance laptops"
+        }
+    ],
+    "approvals": [
+        {
+            "approver_id": 2,
+            "status": "pending"
+        }
+    ]
+}
+```
+
+| Field                       | Type    | Validation                |
+|-----------------------------|---------|---------------------------|
+| `lpbj_id`                   | integer | required, exists:lpbjs,id |
+| `quotation_number`          | string  | required, string          |
+| `quotation_date`            | date    | required, date            |
+| `pr_no`                     | string  | nullable, string          |
+| `description`               | string  | nullable, string          |
+| `frenco`                    | string  | nullable, string          |
+| `pkp`                       | string  | nullable, string          |
+| `quotation_details`         | array   | nullable, array           |
+| `quotation_details.*.item_id` | integer | required, exists:lpbj_items,id |
+| `quotation_details.*.quantity`| numeric | required, numeric         |
+| `quotation_details.*.price`   | numeric | required, numeric         |
+| `quotation_details.*.total_price`| numeric | required, numeric         |
+| `quotation_details.*.remarks` | string  | sometimes, string         |
+| `approvals`                 | array   | nullable, array           |
+| `approvals.*.approver_id`   | integer | required, exists:users,id |
+| `approvals.*.status`        | string  | required, string          |
+| `approvals.*.approved_at`   | date    | nullable, date            |
+
+**Responses:**
+
+* **201 Created (Success)**
+  ```json
+  {
+      "message": "Quotation created successfully",
+      "code": 201,
+      "data": {}
+  }
+  ```
+* **422 Unprocessable Entity (Validation Error)**
+  ```json
+  {
+    "message": "The given data was invalid.",
+    "errors": {
+        "quotation_number": ["The quotation number field is required."]
+    }
+  }
+  ```
+
+### `PUT /api/quotations/{id}`
+Updates an existing quotation.
+
+**Request Body:**
+All fields are optional (`sometimes`).
+```json
+{
+    "quotation_number": "Q-123-updated",
+    "description": "Updated quotation description"
+}
+```
+
+| Field                       | Type    | Validation                |
+|-----------------------------|---------|---------------------------|
+| `lpbj_id`                   | integer | sometimes, exists:lpbjs,id |
+| `quotation_number`          | string  | sometimes, string          |
+| `quotation_date`            | date    | sometimes, date            |
+
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Quotation updated successfully",
+      "code": 200,
+      "data": {}
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Quotation not found",
+      "code": 404
+  }
+  ```
+
+### `DELETE /api/quotations/{id}`
+Deletes a quotation.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Quotation deleted successfully",
+      "code": 200
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Quotation not found",
+      "code": 404
+  }
+  ```
 //test by TrisGan44
