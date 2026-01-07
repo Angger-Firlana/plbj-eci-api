@@ -76,7 +76,20 @@ Authenticates a user and returns a token.
 
 Registers a new user.
 
-**Request Body (form-data):**
+**Request Body:**
+
+```json
+{
+  "name": "New User",
+  "email": "newuser@example.com",
+  "password": "password",
+  "password_confirmation": "password",
+  "pin": "123456",
+  "is_active": 1,
+  "role_id": 2,
+  "profile_photo": null
+}
+```
 
 | Field                   | Type   | Validation                                          |
 |-------------------------|--------|-----------------------------------------------------|
@@ -378,10 +391,21 @@ Retrieves a specific store by its ID.
   ```
 
 ### `POST /api/stores`
-Creates a new store.
-
 **Request Body:**
+```json
+{
+    "store_code": "S-001",
+    "name": "Main Store",
+    "address": "123 Main St",
+    "city": "Anytown",
+    "phone": "123-456-7890",
+    "email": "main@store.com",
+    "is_active": 1
+}
+```
+
 | Field        | Type    | Validation              |
+
 |--------------|---------|-------------------------|
 | `store_code` | string  | required, string        |
 | `name`       | string  | required, string        |
@@ -416,6 +440,13 @@ Creates a new store.
 Updates a store.
 
 **Request Body:**
+```json
+{
+    "name": "Updated Main Store",
+    "email": "updated@store.com"
+}
+```
+
 | Field        | Type    | Validation              |
 |--------------|---------|-------------------------|
 | `store_code` | string  | sometimes, string        |
@@ -514,7 +545,7 @@ Creates a new LPBJ with associated items.
 {
     "title": "New Equipment Request",
     "request_by": 1,
-    "lpbj_number": 12345,
+    "lpbj_number": "LPBJ-2026-001",
     "department_id": 1,
     "request_date": "2026-01-07",
     "store_id": 1,
@@ -529,10 +560,40 @@ Creates a new LPBJ with associated items.
             "cost_center": "CC-200",
             "order": "ORD-300",
             "information": "For new developers",
-            "item_photo": "(file)"
+            "detail_item": [
+                {
+                    "detail": "Processor i7"
+                },
+                {
+                    "detail": "RAM 16GB"
+                }
+            ]
         }
     ]
 }
+```
+
+| Field                     | Type    | Validation                                  |
+|---------------------------|---------|---------------------------------------------|
+| `title`                   | string  | required, string                            |
+| `request_by`              | integer | required, exists:users,id                   |
+| `lpbj_number`             | string  | required, string, unique:lpbjs              |
+| `department_id`           | integer | required, exists:departments,id             |
+| `request_date`            | date    | required, date                              |
+| `store_id`                | integer | required, exists:stores,id                  |
+| `items`                   | array   | required, array                             |
+| `items.*.name`            | string  | required, string                            |
+| `items.*.quantity`        | numeric | required, numeric                           |
+| `items.*.media`           | string  | required, string                            |
+| `items.*.article`         | string  | nullable, string                            |
+| `items.*.store_id`        | integer | required, exists:stores,id                  |
+| `items.*.general_ledger`  | string  | required, string                            |
+| `items.*.cost_center`     | string  | required, string                            |
+| `items.*.order`           | string  | required, string                            |
+| `items.*.information`     | string  | required, string                            |
+| `items.*.item_photo`      | file    | nullable, image, mimes:jpeg,png,jpg,gif,svg, max:2048 |
+| `items.*.detail_item`     | array   | sometimes, array                            |
+| `items.*.detail_item.*.detail` | string | sometimes, string                         |
 ```
 
 ### `PUT /api/lpbjs/{id}`
@@ -543,15 +604,60 @@ Fields are optional. To update items, include the `items` array. To update an ex
 ```json
 {
     "title": "Updated Equipment Request",
+    "department_id": 2,
     "items": [
         {
             "id": 1,
             "name": "High-Performance Laptop",
-            "quantity": 3
+            "quantity": 3,
+            "detail_item": [
+                {
+                    "detail_id": 1,
+                    "detail": "Processor i9"
+                },
+                {
+                    "detail": "RAM 32GB"
+                }
+            ]
+        },
+        {
+            "name": "New Monitor",
+            "quantity": 1,
+            "media": "Unit",
+            "article": "MON-01",
+            "store_id": 1,
+            "general_ledger": "GL-101",
+            "cost_center": "CC-201",
+            "order": "ORD-301",
+            "information": "For graphic design"
         }
     ]
 }
 ```
+
+| Field                     | Type    | Validation                                  |
+|---------------------------|---------|---------------------------------------------|
+| `title`                   | string  | sometimes, string                           |
+| `request_by`              | integer | sometimes, exists:users,id                  |
+| `lpbj_number`             | string  | sometimes, string, unique:lpbjs             |
+| `department_id`           | integer | sometimes, exists:departments,id            |
+| `request_date`            | date    | sometimes, date                             |
+| `store_id`                | integer | sometimes, exists:stores,id                 |
+| `items`                   | array   | sometimes, array                            |
+| `items.*.id`              | integer | sometimes, exists:lpbj_items,id (required for existing items) |
+| `items.*.name`            | string  | sometimes, string                           |
+| `items.*.quantity`        | numeric | sometimes, numeric                          |
+| `items.*.media`           | string  | sometimes, string                           |
+| `items.*.article`         | string  | sometimes, string                           |
+| `items.*.store_id`        | integer | sometimes, exists:stores,id                 |
+| `items.*.general_ledger`  | string  | sometimes, string                           |
+| `items.*.cost_center`     | string  | sometimes, string                           |
+| `items.*.order`           | string  | sometimes, string                           |
+| `items.*.information`     | string  | sometimes, string                           |
+| `items.*.item_photo`      | file    | nullable, image, mimes:jpeg,png,jpg,gif,svg, max:2048 |
+| `items.*.detail_item`     | array   | sometimes, array                            |
+| `items.*.detail_item.*.detail_id` | integer | sometimes, exists:detail_items,id (required for existing details) |
+| `items.*.detail_item.*.detail` | string | sometimes, string                         |
 
 ### `DELETE /api/lpbjs/{id}`
 Deletes a LPBJ.
@@ -613,6 +719,15 @@ Retrieves a specific job by its ID.
 Creates a new job.
 
 **Request Body:**
+```json
+{
+    "department_id": 1,
+    "job_level_id": 1,
+    "name": "Software Engineer",
+    "head_count": 5
+}
+```
+
 | Field          | Type    | Validation                         |
 |----------------|---------|------------------------------------|
 | `department_id`| integer | nullable, exists:departments,id    |
@@ -620,10 +735,18 @@ Creates a new job.
 | `name`         | string  | required, string                   |
 | `head_count`   | integer | required, integer                  |
 
+
 ### `PUT /api/jobs/{id}`
 Updates a job.
 
 **Request Body:**
+```json
+{
+    "name": "Lead Software Engineer",
+    "head_count": 7
+}
+```
+
 | Field          | Type    | Validation                         |
 |----------------|---------|------------------------------------|
 | `department_id`| integer | sometimes, exists:departments,id    |
@@ -689,6 +812,13 @@ Retrieves a specific position by its ID.
 Assigns a job to a user, creating a position.
 
 **Request Body:**
+```json
+{
+    "eci_job_id": 1,
+    "user_id": 1
+}
+```
+
 | Field        | Type    | Validation                   |
 |--------------|---------|------------------------------|
 | `eci_job_id` | integer | required, exists:eci_jobs,id |
@@ -698,6 +828,12 @@ Assigns a job to a user, creating a position.
 Updates a position.
 
 **Request Body:**
+```json
+{
+    "user_id": 2
+}
+```
+
 | Field        | Type    | Validation                   |
 |--------------|---------|------------------------------|
 | `eci_job_id` | integer | sometimes, exists:eci_jobs,id |
@@ -765,6 +901,17 @@ Retrieves a specific vendor by its ID.
 Creates a new vendor.
 
 **Request Body:**
+```json
+{
+    "name": "Supplier A",
+    "address": "123 Industrial Rd",
+    "phone": "111-222-3333",
+    "email": "contact@supplierA.com",
+    "to_vendor": "Accounts Payable",
+    "contact_person": "Jane Doe"
+}
+```
+
 | Field            | Type   | Validation        |
 |------------------|--------|-------------------|
 | `name`           | string | required, string  |
@@ -778,6 +925,13 @@ Creates a new vendor.
 Updates a vendor.
 
 **Request Body:**
+```json
+{
+    "phone": "444-555-6666",
+    "contact_person": "John Smith"
+}
+```
+
 | Field            | Type   | Validation        |
 |------------------|--------|-------------------|
 | `name`           | string | sometimes, string |
@@ -878,25 +1032,33 @@ Creates a new quotation.
 ```json
 {
     "lpbj_id": 1,
-    "quotation_number": "Q-123",
+    "quotation_number": "Q-2026-001",
     "quotation_date": "2026-01-07",
     "pr_no": "PR-001",
-    "description": "Quotation for new equipment",
-    "frenco": "Franco",
-    "pkp": "PKP",
+    "description": "Quotation for new office supplies",
+    "frenco": "Ex-work",
+    "pkp": "Non-PKP",
     "quotation_details": [
         {
             "item_id": 1,
-            "quantity": 2,
-            "price": 1500,
-            "total_price": 3000,
-            "remarks": "High-performance laptops"
+            "quantity": 10,
+            "price": 50000,
+            "total_price": 500000,
+            "remarks": "Pens (blue ink)"
+        },
+        {
+            "item_id": 2,
+            "quantity": 5,
+            "price": 100000,
+            "total_price": 500000,
+            "remarks": "Notebooks (A4)"
         }
     ],
     "approvals": [
         {
             "approver_id": 2,
-            "status": "pending"
+            "status": "pending",
+            "approved_at": null
         }
     ]
 }
@@ -949,8 +1111,31 @@ Updates an existing quotation.
 All fields are optional (`sometimes`).
 ```json
 {
-    "quotation_number": "Q-123-updated",
-    "description": "Updated quotation description"
+    "quotation_number": "Q-2026-001-REV1",
+    "description": "Revised quotation for office supplies",
+    "quotation_details": [
+        {
+            "item_id": 1,
+            "quantity": 12,
+            "price": 50000,
+            "total_price": 600000,
+            "remarks": "Pens (blue ink), increased quantity"
+        },
+        {
+            "item_id": 3,
+            "quantity": 3,
+            "price": 200000,
+            "total_price": 600000,
+            "remarks": "Ergonomic Chairs"
+        }
+    ],
+    "approvals": [
+        {
+            "approver_id": 2,
+            "status": "approved",
+            "approved_at": "2026-01-08T10:00:00.000000Z"
+        }
+    ]
 }
 ```
 
@@ -1107,20 +1292,28 @@ Creates a new purchased order.
     "purchased_order_date": "2026-01-07",
     "delivery_date": "2026-01-14",
     "status": "pending",
-    "notes": "Urgent order",
+    "notes": "Urgent order for office supplies",
     "purchased_order_details": [
         {
-            "item_name": "Laptop",
-            "quantity": 2,
-            "price": 1500,
-            "total_price": 3000,
-            "remarks": "High-performance model"
+            "item_name": "Pens (blue ink)",
+            "quantity": 10,
+            "price": 50000,
+            "total_price": 500000,
+            "remarks": "As per quotation Q-2026-001"
+        },
+        {
+            "item_name": "Notebooks (A4)",
+            "quantity": 5,
+            "price": 100000,
+            "total_price": 500000,
+            "remarks": "As per quotation Q-2026-001"
         }
     ],
     "approvals": [
         {
             "approver_id": 2,
-            "status": "pending"
+            "status": "pending",
+            "approved_at": null
         }
     ]
 }
@@ -1176,7 +1369,24 @@ All fields are optional (`sometimes`).
 ```json
 {
     "status": "approved",
-    "delivery_date": "2026-01-20"
+    "delivery_date": "2026-01-20",
+    "notes": "Order approved and delivery rescheduled.",
+    "purchased_order_details": [
+        {
+            "item_name": "Pens (blue ink)",
+            "quantity": 10,
+            "price": 50000,
+            "total_price": 500000,
+            "remarks": "Final quantity"
+        }
+    ],
+    "approvals": [
+        {
+            "approver_id": 2,
+            "status": "approved",
+            "approved_at": "2026-01-08T14:30:00Z"
+        }
+    ]
 }
 ```
 
