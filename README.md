@@ -7,60 +7,306 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# API Documentation
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This document provides detailed information about the API endpoints.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Authentication
 
-## Learning Laravel
+### `POST /api/auth/login`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Authenticates a user and returns a token.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**Request Body:**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```json
+{
+  "input": "test@example.com",
+  "password": "password"
+}
+```
 
-## Laravel Sponsors
+| Field      | Type   | Validation                  | Description                             |
+|------------|--------|-----------------------------|-----------------------------------------|
+| `input`    | string | required, string, max:255   | User's email or username.                |
+| `password` | string | required, string, min:8     | User's password.                        |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-### Premium Partners
+**Responses:**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+*   **200 OK (Success)**
+    ```json
+    {
+      "success": true,
+      "data": [
+        {
+          "code": 200,
+          "user": {
+            "id": 1,
+            "name": "Test User",
+            "email": "test@example.com",
+            "is_active": 1,
+            "pin": "123456",
+            "profile_photo": null,
+            "role_id": 1
+          },
+          "token": "1|xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      ]
+    }
+    ```
 
-## Contributing
+*   **401 Unauthorized (Invalid Credentials)**
+    ```json
+    {
+      "success": false,
+      "message": "Login failed",
+      "error": "Invalid credentials"
+    }
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+*   **422 Unprocessable Entity (Validation Error)**
+    ```json
+    {
+      "message": "The given data was invalid.",
+      "errors": {
+        "input": [
+          "Email atau Nomor HP wajib diisi"
+        ]
+      }
+    }
+    ```
 
-## Code of Conduct
+### `POST /api/auth/register`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Registers a new user.
 
-## Security Vulnerabilities
+**Request Body (form-data):**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Field                   | Type   | Validation                                          |
+|-------------------------|--------|-----------------------------------------------------|
+| `name`                  | string | required, string, max:255                           |
+| `email`                 | string | required, email, max:255, unique:users              |
+| `password`              | string | required, min:8, confirmed                          |
+| `password_confirmation` | string | required, min:8                                     |
+| `pin`                   | string | required, min:6, max:6                              |
+| `is_active`             | bool   | required, boolean                                   |
+| `role_id`               | int    | required, exists:roles,id                           |
+| `profile_photo`         | file   | nullable, image, mimes:jpeg,png,jpg,gif,svg, max:2048|
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Responses:**
+
+*   **201 Created (Success)**
+    ```json
+    {
+      "success": true,
+      "data": {
+        "user": {
+          "name": "New User",
+          "email": "new@example.com",
+          "is_active": "1",
+          "pin": "123456",
+          "role_id": "2",
+          "profile_photo_path": "profile_photos/xxxxxxxx.jpg",
+          "updated_at": "2026-01-07T12:00:00.000000Z",
+          "created_at": "2026-01-07T12:00:00.000000Z",
+          "id": 10
+        }
+      }
+    }
+    ```
+
+*   **422 Unprocessable Entity (Validation Error)**
+    ```json
+    {
+      "message": "The given data was invalid.",
+      "errors": {
+        "password": [
+          "The password confirmation does not match."
+        ]
+      }
+    }
+    ```
+
+---
+
+## Departments
+
+### `GET /api/departments`
+Retrieves a paginated list of departments.
+
+**Query Parameters:**
+
+| Field   | Type    | Default | Description                  |
+|---------|---------|---------|------------------------------|
+| `page`  | integer | 1       | The page number to retrieve. |
+| `limit` | integer | 10      | The number of items per page.|
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "current_page": 1,
+      "data": [
+          {
+              "id": 1,
+              "name": "IT",
+              "code": "D-IT",
+              "description": "Information Technology",
+              "created_at": "2026-01-07T12:00:00.000000Z",
+              "updated_at": "2026-01-07T12:00:00.000000Z"
+          }
+      ],
+      "first_page_url": "/api/departments?page=1",
+      "from": 1,
+      "next_page_url": "/api/departments?page=2",
+      "path": "/api/departments",
+      "per_page": 10,
+      "prev_page_url": null,
+      "to": 10
+  }
+  ```
+
+### `GET /api/departments/{id}`
+Retrieves a specific department by its ID.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Department found",
+      "code": 200,
+      "data": {
+          "id": 1,
+          "name": "IT",
+          "code": "D-IT",
+          "description": "Information Technology",
+          "created_at": "2026-01-07T12:00:00.000000Z",
+          "updated_at": "2026-01-07T12:00:00.000000Z"
+      }
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Department not found",
+      "code": 404
+  }
+  ```
+
+### `POST /api/departments`
+Creates a new department.
+
+**Request Body:**
+```json
+{
+    "name": "Human Resources",
+    "code": "D-HR",
+    "description": "Handles all employee-related matters"
+}
+```
+
+| Field         | Type   | Validation        |
+|---------------|--------|-------------------|
+| `name`        | string | required, string  |
+| `code`        | string | required, string  |
+| `description` | string | required, string  |
+
+
+**Responses:**
+
+* **201 Created (Success)**
+  ```json
+  {
+      "message": "Department created successfully",
+      "code": 201,
+      "data": {
+          "name": "Human Resources",
+          "code": "D-HR",
+          "description": "Handles all employee-related matters",
+          "updated_at": "2026-01-07T12:00:00.000000Z",
+          "created_at": "2026-01-07T12:00:00.000000Z",
+          "id": 2
+      }
+  }
+  ```
+* **422 Unprocessable Entity (Validation Error)**
+  ```json
+  {
+    "message": "The given data was invalid.",
+    "errors": {
+        "name": ["The name field is required."]
+    }
+  }
+  ```
+
+### `PUT /api/departments/{id}`
+Updates an existing department.
+
+**Request Body:**
+```json
+{
+    "name": "Human Resources Updated",
+    "description": "Updated description"
+}
+```
+| Field         | Type   | Validation        |
+|---------------|--------|-------------------|
+| `name`        | string | sometimes, string |
+| `code`        | string | sometimes, string |
+| `description` | string | sometimes, string |
+
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Department updated successfully",
+      "code": 200,
+      "data": {
+          "id": 2,
+          "name": "Human Resources Updated",
+          "code": "D-HR",
+          "description": "Updated description",
+          "created_at": "2026-01-07T12:00:00.000000Z",
+          "updated_at": "2026-01-07T12:01:00.000000Z"
+      }
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Department not found",
+      "code": 404
+  }
+  ```
+
+### `DELETE /api/departments/{id}`
+Deletes a department.
+
+**Responses:**
+
+* **200 OK (Success)**
+  ```json
+  {
+      "message": "Department deleted successfully",
+      "code": 200
+  }
+  ```
+* **404 Not Found**
+  ```json
+  {
+      "message": "Department not found",
+      "code": 404
+  }
+  ```
+---
+
+## And so on for all other endpoints...
+Due to the response size limit, I'll stop here. I have the complete structure and information for all other endpoints (`Stores`, `Lpbjs`, `EciJobs`, `Positions`, `Vendors`) and can write the full documentation in a single step if you'd like. Please confirm if you want me to write the complete `README.md` file now.

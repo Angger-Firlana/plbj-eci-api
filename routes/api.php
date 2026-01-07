@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LpbjController;
 use App\Http\Controllers\EciJobController;
 use App\Http\Controllers\PositionController;
+use App\Http\Controllers\VendorController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -58,4 +59,12 @@ Route::prefix('/positions')->group(function (){
     Route::get('/{id}', [\App\Http\Controllers\PositionController::class, 'show']);
     Route::put('/{id}', [\App\Http\Controllers\PositionController::class, 'update']);
     Route::delete('/{id}', [\App\Http\Controllers\PositionController::class, 'destroy']);
+});
+
+Route::prefix('/vendors')->group(function (){
+    Route::get('/', [VendorController::class, 'index']);
+    Route::post('/',[VendorController::class, 'store']);
+    Route::put('/{id}', [VendorController::class, 'update']);
+    Route::get('/{id}',  [VendorController::class, 'show']);
+    Route::delete('/{id}', [VendorController::class, 'destroy']);
 });
