@@ -10,8 +10,19 @@ use App\Http\Requests\UpdateDepartmentRequest;
 
 class DepartmentController extends Controller
 {
+    /**
+     * The department service instance.
+     *
+     * @var \App\Services\DepartmentService
+     */
     protected $departmentService;
     
+    /**
+     * Create a new controller instance.
+     *
+     * @param  \App\Services\DepartmentService  $departmentService
+     * @return void
+     */
     public function __construct(DepartmentService $departmentService)
     {
         $this->departmentService = $departmentService;
@@ -19,6 +30,9 @@ class DepartmentController extends Controller
     
     /**
      * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
@@ -28,6 +42,9 @@ class DepartmentController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StoreDepartmentRequest  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(StoreDepartmentRequest $request)
     {
@@ -42,6 +59,9 @@ class DepartmentController extends Controller
 
     /**
      * Display the specified resource.
+     *
+     * @param  string  $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(string $id)
     {
@@ -55,6 +75,10 @@ class DepartmentController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, string $id)
     {
@@ -68,6 +92,9 @@ class DepartmentController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param  string  $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(string $id)
     {

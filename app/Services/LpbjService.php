@@ -6,6 +6,12 @@ use App\Models\Lpbj;
 
 class LpbjService
 {
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function show($id):array{
         $lpbj = Lpbj::with('lpbj_items', 'department', 'user')->find($id);
         if(!$lpbj){
@@ -21,6 +27,13 @@ class LpbjService
             'code' => 200,
         ];
     }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  array  $data
+     * @return array
+     */
     public function store(array $data): array
     {
         $lpbj = Lpbj::create([
@@ -49,6 +62,13 @@ class LpbjService
         ];
     }
 
+    /**
+     * Store items for a given LPBJ.
+     *
+     * @param  array  $items
+     * @param  \App\Models\Lpbj  $lpbj
+     * @return void
+     */
     public function storeItems(array $items, Lpbj $lpbj): void
     {
         foreach ($items as $item) {
@@ -80,6 +100,13 @@ class LpbjService
         }
     }
 
+    /**
+     * Store a single item for a given LPBJ.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Lpbj  $lpbj
+     * @return void
+     */
     public function storeItem(Request $request, Lpbj $lpbj): void
     {
         $photoPath = $request['item_photo']->store('item_photos', 'public');
@@ -105,6 +132,13 @@ class LpbjService
         }
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  array  $data
+     * @param  int  $id
+     * @return array
+     */
     public function update(array $data, $id): array
     {
         $lpbj = Lpbj::findOrFail($id);
@@ -127,6 +161,13 @@ class LpbjService
         ];
     }
 
+    /**
+     * Update a single item for a given LPBJ.
+     *
+     * @param  array  $data
+     * @param  int  $id
+     * @return void
+     */
     public function updateItem(array $data, $id): void
     {
         $lpbj = Lpbj::findOrFail($id);
@@ -164,6 +205,13 @@ class LpbjService
         ]);
     }
 
+    /**
+     * Update items for a given LPBJ.
+     *
+     * @param  array  $items
+     * @param  \App\Models\Lpbj  $lpbj
+     * @return void
+     */
     public function updateItems(array $items, Lpbj $lpbj): void
     {
         foreach ($items as $item) {
@@ -205,6 +253,12 @@ class LpbjService
         }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return void
+     */
     public function destroy($id): void
     {
         $lpbj = Lpbj::findOrFail($id);

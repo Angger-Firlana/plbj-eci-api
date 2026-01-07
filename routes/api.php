@@ -6,6 +6,7 @@ use App\Http\Controllers\LpbjController;
 use App\Http\Controllers\EciJobController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\UserController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -75,4 +76,12 @@ Route::prefix('/vendors')->group(function (){
     Route::put('/{id}', [VendorController::class, 'update']);
     Route::get('/{id}',  [VendorController::class, 'show']);
     Route::delete('/{id}', [VendorController::class, 'destroy']);
+});
+
+Route::prefix('/users')->group(function (){
+    Route::get('/', [UserController::class, 'index']);
+    Route::post('/', [UserController::class, 'store']);
+    Route::get('/{id}', [UserController::class, 'show']);
+    Route::put('/{id}', [UserController::class, 'update']);
+    Route::delete('/{id}', [UserController::class, 'destroy']);
 });

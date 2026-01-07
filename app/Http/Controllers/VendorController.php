@@ -10,12 +10,29 @@ use App\Http\Requests\StoreVendorRequest;
 
 class VendorController extends Controller
 {
+    /**
+     * The vendor service instance.
+     *
+     * @var \App\Services\VendorService
+     */
     protected $vendorService;
 
+    /**
+     * Create a new controller instance.
+     *
+     * @param  \App\Services\VendorService  $vendorService
+     * @return void
+     */
     public function __construct(VendorService $vendorService){
         $this->vendorService = $vendorService;
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(Request $request){
         $data = $this->vendorService->index($request);
 
@@ -31,6 +48,12 @@ class VendorController extends Controller
         );
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StoreVendorRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(StoreVendorRequest $request){
         $data = $this->vendorService->create($request->validated());
 
@@ -46,6 +69,12 @@ class VendorController extends Controller
         );
     }
     
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show($id){
         $data = $this->vendorService->show($id);
 
@@ -61,6 +90,13 @@ class VendorController extends Controller
         );
     }
     
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update($id, Request $request){
         $data = $this->vendorService->update($id, $request->all());
 
@@ -76,6 +112,12 @@ class VendorController extends Controller
         );
     }
     
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy($id){
         $data = $this->vendorService->delete($id);
 

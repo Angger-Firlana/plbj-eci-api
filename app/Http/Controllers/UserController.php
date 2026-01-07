@@ -2,31 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEciJobRequest;
-use App\Http\Requests\UpdateEciJobRequest;
 use Illuminate\Http\Request;
-use App\Models\EciJob;
-use App\Models\JobLevel;
-use App\Services\EciJobService;
+use App\Services\UserService;
+use App\Models\User;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 
-class EciJobController extends Controller
+class UserController extends Controller
 {
     //
     /**
-     * The ECI job service instance.
+     * The user service instance.
      *
-     * @var \App\Services\EciJobService
+     * @var \App\Services\UserService
      */
-    protected $eciJobService;
-
+    protected $userService;
+    
     /**
      * Create a new controller instance.
      *
-     * @param  \App\Services\EciJobService  $eciJobService
+     * @param  \App\Services\UserService  $userService
      * @return void
      */
-    public function __construct(EciJobService $eciJobService){
-        $this->eciJobService = $eciJobService;
+    public function __construct(UserService $userService){
+        $this->userService = $userService;
     }
 
     /**
@@ -36,9 +35,25 @@ class EciJobController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request){
-        $data = $this->eciJobService->index($request);
-      
+        $data = $this->userService->index($request);
+
         return response()->json($data);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StoreUserRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(StoreUserRequest $request){
+        $data = $this->userService->createUser($request->validated());
+
+        if(!($data['code'] >= 200 && $data['code'] < 300)){
+            return response()->json($data, $data['code']);
+        }
+        
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -48,40 +63,30 @@ class EciJobController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id){
-        $data = $this->eciJobService->show($id);
-        if(!($data['code'] >= 200 && $data['code'] < 300)){
-            return response()->json($data, $data['code']);
-        }
-        return response()->json($data['data'], $data['code']);
-    }
+        $data = $this->userService->getUser($id);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreEciJobRequest  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(StoreEciJobRequest $request){
-        $data = $this->eciJobService->store($request->validated());
         if(!($data['code'] >= 200 && $data['code'] < 300)){
             return response()->json($data, $data['code']);
         }
-        return response()->json($data['data'], $data['code']);
+
+        return response()->json($data);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  int  $id
-     * @param  \App\Http\Requests\UpdateEciJobRequest  $request
+     * @param  \App\Http\Requests\UpdateUserRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update($id, UpdateEciJobRequest $request){
-        $data = $this->eciJobService->update($id, $request->validated());
+    public function update($id, UpdateUserRequest $request){
+        $data = $this->userService->update($id, $request->validated());
+
         if(!($data['code'] >= 200 && $data['code'] < 300)){
             return response()->json($data, $data['code']);
         }
-        return response()->json($data['data'], $data['code']);
+
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -91,10 +96,12 @@ class EciJobController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id){
-        $data = $this->eciJobService->destroy($id);
+        $data = $this->userService->destroy($id);
+
         if(!($data['code'] >= 200 && $data['code'] < 300)){
             return response()->json($data, $data['code']);
         }
-        return response()->json($data['data'], $data['code']);
+
+        return response()->json($data, $data[code]);
     }
 }

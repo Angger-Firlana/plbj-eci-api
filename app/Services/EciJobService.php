@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class EciJobService
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
     public function index(Request $request):array
     {
         $page = $request->get('page', 1);
@@ -20,6 +26,12 @@ class EciJobService
         return $query->simplePaginate($limit, ['*'], 'page', $page)->toArray();
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function show($id):array
     {
         $eciJobs = EciJob::findOrFail($id);
@@ -35,6 +47,12 @@ class EciJobService
         ];
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  array  $data
+     * @return array
+     */
     public function store(array $data):array
     {
         $job = EciJob::create([
@@ -61,6 +79,13 @@ class EciJobService
         ];
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @param  array  $data
+     * @return array
+     */
     public function update($id, array $data):array
     {
         $eciJob = EciJob::findOrFail($id);
@@ -81,6 +106,12 @@ class EciJobService
         ];
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function destroy($id):array
     {
         $eciJob = EciJob::findOrFail($id);

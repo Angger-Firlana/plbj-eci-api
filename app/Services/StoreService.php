@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 class StoreService
 {
     //
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
     public function index(Request $request):array   
     {
         $page = $request->get('page', 1);
@@ -14,6 +20,12 @@ class StoreService
         return Store::simplePaginate($limit, ['*'], 'page', $page)->toArray();
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function show($id):array{
         $store = Store::find($id);
         if (!$store) {
@@ -29,6 +41,12 @@ class StoreService
         ];
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  array  $data
+     * @return array
+     */
     public function create(array $data):array{
         $store = Store::create([
             'store_code' => $data['store_code'],
@@ -54,6 +72,13 @@ class StoreService
         ];
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @param  array  $data
+     * @return array
+     */
     public function update($id, array $data):array{
         $store = Store::find($id);
         if (!$store) {
@@ -87,6 +112,12 @@ class StoreService
         ];
     }
     
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function delete($id):array{
         $store = Store::find($id);
         if (!$store) {

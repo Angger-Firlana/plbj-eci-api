@@ -6,7 +6,13 @@ use Illuminate\Support\Facades\Hash;
 use App\Services\UserService;
 class AuthService
 {
-    public function Login(array $data):array{
+    /**
+     * Authenticate a user and return a token.
+     *
+     * @param  array  $data
+     * @return array
+     */
+    public function login(array $data):array{
         $user = User::where('email', $data['input'])->first()
             ?? User::where('name', $data['input'])->first();
 
@@ -33,7 +39,15 @@ class AuthService
             'token' => $user->createToken("Login Token")->plainTextToken
         ];
     }
-    public function Register(array $data): User
+
+    /**
+     * Register a new user.
+     *
+     * @param  array  $data
+     * @return array
+     * @throws \Exception
+     */
+    public function register(array $data): array
     {
         $userService = new UserService();
         $user = $userService->createUser($data);

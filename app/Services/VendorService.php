@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\DB;
 
 class VendorService
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
     public function index(Request $request):array{
         $page = $request->get('page', 1);
         $limit = $request->get('limit', 10);
@@ -33,6 +39,12 @@ class VendorService
         ];
     }   
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function show($id):array{
         $vendor = Vendor::find($id);
         
@@ -49,6 +61,12 @@ class VendorService
         ];
     }
     
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  array  $data
+     * @return array
+     */
     public function create(array $data):array{
         $vendor = Vendor::create([
             'name' => $data['name'],
@@ -73,6 +91,13 @@ class VendorService
         ];
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @param  array  $data
+     * @return array
+     */
     public function update($id, array $data):array{
         $vendor = Vendor::find($id);
         
@@ -106,6 +131,12 @@ class VendorService
         ];
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function delete($id):array{
         $vendor = Vendor::find($id);
         

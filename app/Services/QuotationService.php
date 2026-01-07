@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class QuotationService
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
     public function index(Request $request){
         $page = $request->get('page', 1);
         $limit = $request->get('limit', 10);
@@ -47,6 +53,12 @@ class QuotationService
         ;
     }
     
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function show($id): array
     {
         $quotation = Quotation::with([
@@ -69,6 +81,12 @@ class QuotationService
         ];
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  array  $data
+     * @return array
+     */
     public function create(array $data): array
     {
         $quotation = Quotation::create([
@@ -104,6 +122,13 @@ class QuotationService
         ];
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @param  array  $data
+     * @return array
+     */
     public function update($id, array $data): array
     {
         $quotation = Quotation::find($id);
@@ -150,6 +175,12 @@ class QuotationService
         ];
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function delete($id): array
     {
         $quotation = Quotation::find($id);

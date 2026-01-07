@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class PositionService
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
     public function index(Request $request):array
     {
         $page = $request->get('page', 1);
@@ -22,6 +28,12 @@ class PositionService
         return $positions->toArray();
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function show($id):array
     {
         $position = Position::find($id);
@@ -39,6 +51,12 @@ class PositionService
         ];
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  array  $data
+     * @return array
+     */
     public function store(array $data):array
     {
         $position = Position::create([
@@ -60,6 +78,13 @@ class PositionService
         ];
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @param  array  $data
+     * @return array
+     */
     public function update($id, array $data):array
     {
         $position = Position::find($id);
@@ -78,6 +103,12 @@ class PositionService
         ];
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function destroy($id):array
     {
         $position = Position::find($id);

@@ -10,18 +10,34 @@ use Illuminate\Support\Facades\Hash;
 use App\Services\AuthService;
 class AuthController extends Controller
 {
+    /**
+     * The authentication service instance.
+     *
+     * @var \App\Services\AuthService
+     */
     protected $authService;
     
+    /**
+     * Create a new controller instance.
+     *
+     * @param  \App\Services\AuthService  $authService
+     * @return void
+     */
     public function __construct(AuthService $authService)
     {
         $this->authService = $authService;
     }
     
-    //
-    public function Login(LoginRequest $request){
+    /**
+     * Authenticate a user and return a token.
+     *
+     * @param  \App\Http\Requests\LoginRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login(LoginRequest $request){
         //
         try{
-            $data = $this->authService->Login($request->validated());
+            $data = $this->authService->login($request->validated());
 
             if($data['code'] !== 200) {
                 return response()->json([
@@ -33,9 +49,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => [
-                    $data
-                ],
+                'data' => $data,
             ], 200);
         }catch(\Exception $e) {
             return response()->json(['message' => 'Login failed', 'error' => $e->getMessage()], 500);
@@ -43,6 +57,12 @@ class AuthController extends Controller
         
     }
     
+    /**
+     * Register a new user.
+     *
+     * @param  \App\Http\Requests\RegisterRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(RegisterRequest $request){
         //
         try{
@@ -51,7 +71,7 @@ class AuthController extends Controller
                 $photoPath = $request->file('profile_photo')->store('profile_photos', 'public');
             }
 
-            $user = $this->authService->Register(
+            $user = $this->authService-register(
                 [
                     'name' => $request['name'],
                     'email' => $request['email'],
@@ -64,9 +84,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'user' => $user,
-                ],
+                'data' => $user,
             ], 201);
         }catch (\Exception $e) {
             return response()->json(['message' => 'Registration failed', 'error' => $e->getMessage()], 500);

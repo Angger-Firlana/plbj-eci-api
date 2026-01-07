@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 class DepartmentService
 {
     //
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
     public function getDepartments(Request $request):array{
         $page = $request->get('page',1);
         $limit = $request->get('limit',10);
@@ -16,6 +22,12 @@ class DepartmentService
         return $departments->toArray();
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function getDepartment($id):array{
         $department = Department::find($id);
         if(!$department){
@@ -31,6 +43,12 @@ class DepartmentService
         ];
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  array  $data
+     * @return array
+     */
     public function create(array $data):array{
         $department = Department::create([
             'name' => $data['name'],
@@ -52,6 +70,13 @@ class DepartmentService
         ];
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @param  array  $data
+     * @return array
+     */
     public function update($id, array $data):array{
         $department = Department::find($id);
         if(!$department){
@@ -74,6 +99,12 @@ class DepartmentService
         ];
     }
     
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return array
+     */
     public function delete($id):array{
         $department = Department::find($id);
         if(!$department){
