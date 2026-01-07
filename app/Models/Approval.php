@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Model;
  * Class Approval
  * 
  * @property int $id
- * @property int $document_type_id
  * @property string $document_type
  * @property int $document_id
  * @property int $approver_id
@@ -31,14 +30,12 @@ class Approval extends Model
 	protected $table = 'approvals';
 
 	protected $casts = [
-		'document_type_id' => 'int',
 		'document_id' => 'int',
 		'approver_id' => 'int',
 		'approved_at' => 'datetime'
 	];
 
 	protected $fillable = [
-		'document_type_id',
 		'document_type',
 		'document_id',
 		'approver_id',
@@ -51,12 +48,11 @@ class Approval extends Model
 		return $this->belongsTo(User::class, 'approver_id');
 	}
 
-	public function document_type()
-	{
-		return $this->belongsTo(DocumentType::class);
-	}
-
 	public function document(){
-		
+		return $this->morphTo([
+			'name' => 'document',
+			'type' => 'document_type',
+			'id' => 'document_id'
+		]);
 	}
 }

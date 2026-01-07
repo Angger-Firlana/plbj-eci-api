@@ -71,4 +71,9 @@ class Quotation extends Model
 	{
 		return $this->hasMany(QuotationDetail::class);
 	}
+
+	public function approvals()
+	{
+		return $this->morphMany(Approval::class, 'document');
+	}
 }

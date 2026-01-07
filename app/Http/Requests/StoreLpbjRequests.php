@@ -11,7 +11,7 @@ class StoreLpbjRequests extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -39,7 +39,9 @@ class StoreLpbjRequests extends FormRequest
             'items.*.cost_center' => 'required|string',
             'items.*.order'  => 'required|string',
             'items.*.information' => 'required|string',
-            'items.*.item_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'items.*.item_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'items.*.detail_item' => 'sometimes|array',
+            'items.*.detail_item.*.detail' => 'sometimes|string'
         ];
     }
 }

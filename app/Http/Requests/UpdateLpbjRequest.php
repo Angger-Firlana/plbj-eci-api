@@ -39,7 +39,9 @@ class UpdateLpbjRequest extends FormRequest
             'items.*.cost_center' => 'sometimes|string',
             'items.*.order'  => 'sometimes|string',
             'items.*.information' => 'sometimes|string',
-            'items.*.item_photo' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'items.*.item_photo' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'items.*.detail_item' => 'sometimes|array',
+            'items.*.detail_item.*.detail' => 'sometimes|string'
         ];
     }
 }

@@ -61,6 +61,14 @@ Route::prefix('/positions')->group(function (){
     Route::delete('/{id}', [\App\Http\Controllers\PositionController::class, 'destroy']);
 });
 
+Route::prefix('/quotations')->group(function (){
+    Route::get('/', [\App\Http\Controllers\QuotationController::class, 'index']);
+    Route::post('/', [\App\Http\Controllers\QuotationController::class, 'store']);
+    Route::get('/{id}', [\App\Http\Controllers\QuotationController::class, 'show']);
+    Route::put('/{id}', [\App\Http\Controllers\QuotationController::class, 'update']);
+    Route::delete('/{id}', [\App\Http\Controllers\QuotationController::class, 'destroy']);
+});
+
 Route::prefix('/vendors')->group(function (){
     Route::get('/', [VendorController::class, 'index']);
     Route::post('/',[VendorController::class, 'store']);

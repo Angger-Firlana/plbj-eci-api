@@ -76,4 +76,9 @@ class Lpbj extends Model
 	{
 		return $this->hasMany(Quotation::class);
 	}
+
+	public function approvals()
+	{
+		return $this->morphMany(Approval::class, 'document');
+	}
 }

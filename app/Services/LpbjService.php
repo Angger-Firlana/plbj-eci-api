@@ -57,7 +57,7 @@ class LpbjService
                 $photoPath = $item['item_photo']->store('item_photos', 'public');
             }
             
-            $lpbj->lpbj_items()->create([
+            $detail_lpbj = $lpbj->lpbj_items()->create([
                 'name' => $item['name'],
                 'media' => $item['media'] ?? null,
                 'article' => $item['article'] ?? null,
@@ -69,13 +69,21 @@ class LpbjService
                 'information' => $item['information'] ?? null,
                 'item_photo' => $photoPath
             ]);
+
+            if(isset($item['detail_item'])){
+                foreach($item['detail_item'] as $detail){
+                    $detail_lpbj->detailItems()->create([
+                        'detail' => $detail['detail']
+                    ]);
+                }
+            }
         }
     }
 
     public function storeItem(Request $request, Lpbj $lpbj): void
     {
         $photoPath = $request['item_photo']->store('item_photos', 'public');
-        $lpbj->items()->create([
+        $detail_lpbj = $lpbj->items()->create([
             'name' => $request->name,
             'media' => $request->media,
             'article' => $request->article,
@@ -87,6 +95,14 @@ class LpbjService
             'information' => $request->information,
             'item_photo' => $photoPath
         ]);
+        
+        if(isset($request['detail_item'])){
+            foreach($request['detail_item'] as $detail){
+                $detail_lpbj->detailItems()->create([
+                    'detail' => $detail['detail']
+                ]);
+            }
+        }
     }
 
     public function update(array $data, $id): array
@@ -118,6 +134,20 @@ class LpbjService
         if(isset($data['item_photo']) && $data['item_photo']) {
             $photoPath = $data['item_photo']->store('item_photos', 'public');
         }
+
+        if(isset($data['detail_item'])){
+            foreach($data['detail_item'] as $detail){
+                if(isset($detail['detail_id'])) {
+                    $lpbj->detailItems()->where('id', $detail['detail_id'])->update([
+                        'detail' => $detail['detail']
+                    ]);
+                } else {
+                    $lpbj->detailItems()->create([
+                        'detail' => $detail['detail']
+                    ]);
+                }
+            }
+        }
         
         // Update the item with the new data
         $lpbj->update([
@@ -148,6 +178,20 @@ class LpbjService
                 'order' => $item['order'] ?? null,
                 'information' => $item['information'] ?? null,
             ];
+
+            if(isset($item['detail_item'])){
+                foreach($item['detail_item'] as $detail){
+                    if(isset($detail['detail_id'])) {
+                        $lpbj->detailItems()->where('id', $detail['detail_id'])->update([
+                            'detail' => $detail['detail']
+                        ]);
+                    } else {
+                        $lpbj->detailItems()->create([
+                            'detail' => $detail['detail']
+                        ]);
+                    }
+                }
+            }
             
             if (isset($item['item_photo']) && $item['item_photo']) {
                 $updateData['item_photo'] = $item['item_photo']->store('item_photos', 'public');

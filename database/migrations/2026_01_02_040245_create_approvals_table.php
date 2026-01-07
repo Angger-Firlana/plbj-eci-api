@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('approvals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('document_type_id')->constrained('document_types')->onDelete('cascade');  
             $table->morphs('document');
             $table->foreignId('approver_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');

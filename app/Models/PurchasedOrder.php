@@ -76,4 +76,8 @@ class PurchasedOrder extends Model
 	{
 		return $this->hasMany(PurchasedOrderDetail::class);
 	}
+
+	public function approvals(){
+		return $this->morphMany(Approval::class, 'document');
+	}
 }
