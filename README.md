@@ -1,12 +1,5 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
 # API Documentation
 
 This document provides detailed information about the API endpoints.
@@ -308,5 +301,183 @@ Deletes a department.
   ```
 ---
 
-## And so on for all other endpoints...
-Due to the response size limit, I'll stop here. I have the complete structure and information for all other endpoints (`Stores`, `Lpbjs`, `EciJobs`, `Positions`, `Vendors`) and can write the full documentation in a single step if you'd like. Please confirm if you want me to write the complete `README.md` file now.
+## Stores
+
+### `GET /api/stores`
+Retrieves a paginated list of stores.
+
+**Query Parameters:**
+| Field   | Type    | Default | Description                  |
+|---------|---------|---------|------------------------------|
+| `page`  | integer | 1       | The page number to retrieve. |
+| `limit` | integer | 10      | The number of items per page.|
+
+### `POST /api/stores`
+Creates a new store.
+
+**Request Body:**
+| Field        | Type    | Validation              |
+|--------------|---------|-------------------------|
+| `store_code` | string  | required, string        |
+| `name`       | string  | required, string        |
+| `address`    | string  | required, string        |
+| `city`       | string  | required, string        |
+| `phone`      | string  | required, string        |
+| `email`      | string  | required, email         |
+| `is_active`  | integer | required, integer       |
+
+**Responses:**
+* **201 Created (Success)**
+  ```json
+  {
+      "data": { ...store object... },
+      "message": "Store created successfully",
+      "code": 201
+  }
+  ```
+
+### `PUT /api/stores/{id}`
+Updates a store.
+
+**Request Body:**
+| Field        | Type    | Validation              |
+|--------------|---------|-------------------------|
+| `store_code` | string  | sometimes, string        |
+| `name`       | string  | sometimes, string        |
+| `address`    | string  | sometimes, string        |
+| `city`       | string  | sometimes, string        |
+| `phone`      | string  | sometimes, string        |
+| `email`      | string  | sometimes, email         |
+| `is_active`  | integer | sometimes, integer       |
+
+---
+
+## LPBJ
+
+### `POST /api/lpbjs`
+Creates a new LPBJ with associated items.
+
+**Request Body:**
+*Note: Validation is handled in the service layer, not via a FormRequest.*
+```json
+{
+    "title": "New Equipment Request",
+    "request_by": 1,
+    "lpbj_number": 12345,
+    "department_id": 1,
+    "request_date": "2026-01-07",
+    "store_id": 1,
+    "items": [
+        {
+            "name": "Laptop",
+            "quantity": 2,
+            "media": "Unit",
+            "article": "LP-01",
+            "store_id": 1,
+            "general_ledger": "GL-100",
+            "cost_center": "CC-200",
+            "order": "ORD-300",
+            "information": "For new developers"
+        }
+    ]
+}
+```
+
+### `PUT /api/lpbjs/{id}`
+Updates an LPBJ and its items.
+
+**Request Body:**
+Fields are optional. To update items, include the `items` array. To update an existing item, include its `id`.
+```json
+{
+    "title": "Updated Equipment Request",
+    "items": [
+        {
+            "id": 1,
+            "name": "High-Performance Laptop",
+            "quantity": 3
+        }
+    ]
+}
+```
+
+---
+
+## Jobs
+
+### `GET /api/jobs`
+Retrieves a paginated list of jobs.
+
+### `POST /api/jobs`
+Creates a new job.
+
+**Request Body:**
+| Field          | Type    | Validation                         |
+|----------------|---------|------------------------------------|
+| `department_id`| integer | nullable, exists:departments,id    |
+| `job_level_id` | integer | required, exists:job_levels,id      |
+| `name`         | string  | required, string                   |
+| `head_count`   | integer | required, integer                  |
+
+### `PUT /api/jobs/{id}`
+Updates a job.
+
+**Request Body:**
+| Field          | Type    | Validation                         |
+|----------------|---------|------------------------------------|
+| `department_id`| integer | sometimes, exists:departments,id    |
+| `job_level_id` | integer | sometimes, exists:job_levels,id      |
+| `name`         | string  | sometimes, string                   |
+| `head_count`   | integer | sometimes, integer                  |
+
+---
+
+## Positions
+
+### `POST /api/positions`
+Assigns a job to a user, creating a position.
+
+**Request Body:**
+| Field        | Type    | Validation                   |
+|--------------|---------|------------------------------|
+| `eci_job_id` | integer | required, exists:eci_jobs,id |
+| `user_id`    | integer | required, exists:users,id    |
+
+### `PUT /api/positions/{id}`
+Updates a position.
+
+**Request Body:**
+| Field        | Type    | Validation                   |
+|--------------|---------|------------------------------|
+| `eci_job_id` | integer | sometimes, exists:eci_jobs,id |
+| `user_id`    | integer | sometimes, exists:users,id    |
+
+---
+
+## Vendors
+
+### `POST /api/vendors`
+Creates a new vendor.
+
+**Request Body:**
+| Field            | Type   | Validation        |
+|------------------|--------|-------------------|
+| `name`           | string | required, string  |
+| `address`        | string | required, string  |
+| `phone`          | string | required, string  |
+| `email`          | string | required, email   |
+| `to_vendor`      | string | required, string  |
+| `contact_person` | string | required, string  |
+
+### `PUT /api/vendors/{id}`
+Updates a vendor.
+
+**Request Body:**
+| Field            | Type   | Validation        |
+|------------------|--------|-------------------|
+| `name`           | string | sometimes, string |
+| `address`        | string | sometimes, string |
+| `phone`          | string | sometimes, string |
+| `email`          | string | sometimes, email  |
+| `to_vendor`      | string | sometimes, string |
+| `contact_person` | string | sometimes, string |
