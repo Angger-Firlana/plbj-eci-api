@@ -63,10 +63,14 @@ class PurchasedOrderService
         try {
             $purchasedOrder = PurchasedOrder::create([
                 'quotation_id' => $data['quotation_id'] ?? null,
+                'store_id' => $data['store_id'],
                 'vendor_id' => $data['vendor_id'],
                 'purchased_order_number' => $data['purchased_order_number'],
                 'purchased_order_date' => $data['purchased_order_date'],
+                'term' => $data['term'],
+                'cost' => $data['cost'],
                 'delivery_date' => $data['delivery_date'],
+                'expired_date' => $data['expired_date'],
                 'status' => $data['status'] ?? 'pending',
                 'notes' => $data['notes'] ?? null,
             ]);
@@ -118,10 +122,14 @@ class PurchasedOrderService
 
             $purchasedOrder->update([
                 'quotation_id' => $data['quotation_id'] ?? $purchasedOrder->quotation_id,
+                'store_id' => $data['store_id'] ?? $purchasedOrder->store_id,
                 'vendor_id' => $data['vendor_id'] ?? $purchasedOrder->vendor_id,
                 'purchased_order_number' => $data['purchased_order_number'] ?? $purchasedOrder->purchased_order_number,
                 'purchased_order_date' => $data['purchased_order_date'] ?? $purchasedOrder->purchased_order_date,
+                'term' => $data['term'] ?? $purchasedOrder->term,
+                'cost' => $data['cost'] ?? $purchasedOrder->cost,
                 'delivery_date' => $data['delivery_date'] ?? $purchasedOrder->delivery_date,
+                'expired_date' => $data['expired_date'] ?? $purchasedOrder->expired_date,
                 'status' => $data['status'] ?? $purchasedOrder->status,
                 'notes' => $data['notes'] ?? $purchasedOrder->notes,
             ]);

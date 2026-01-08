@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $purchased_order_id
  * @property int $quotation_detail_id
+ * @property string $item_name
+ * @property string $model
  * @property float $discount
  * @property float $amount
  * @property Carbon|null $created_at
@@ -32,6 +34,9 @@ class PurchasedOrderDetail extends Model
 	protected $casts = [
 		'purchased_order_id' => 'int',
 		'quotation_detail_id' => 'int',
+		'item_name' => 'string',
+		'model' => 'string',
+		'quantity'=> 'int',
 		'discount' => 'float',
 		'amount' => 'float'
 	];
@@ -39,6 +44,9 @@ class PurchasedOrderDetail extends Model
 	protected $fillable = [
 		'purchased_order_id',
 		'quotation_detail_id',
+		'item_name',
+		'model',
+		'quantity',
 		'discount',
 		'amount'
 	];

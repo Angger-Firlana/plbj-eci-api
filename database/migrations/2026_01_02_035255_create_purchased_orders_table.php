@@ -14,10 +14,14 @@ return new class extends Migration
         Schema::create('purchased_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('quotation_id')->nullable()->constrained('quotations')->onDelete('cascade');
+            $table->foreignId('store_id')->constrained('stores');
             $table->foreignId('vendor_id')->constrained('vendors');
             $table->string('purchased_order_number')->unique();
             $table->date('purchased_order_date');
+            $table->string('term');
+            $table->decimal('cost', 15, 2);
             $table->date('delivery_date');
+            $table->date('expired_date');
             $table->enum('status', ['pending', 'approved', 'rejected', 'completed'])->default('pending');
             $table->text('notes')->nullable();
             $table->timestamps();
