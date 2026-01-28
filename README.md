@@ -1,12 +1,82 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-# API Documentation
+# PLBJ ECI API
 
-This document provides detailed information about the API endpoints.
+![Laravel](https://img.shields.io/badge/Laravel-10.x-red?logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.2-blue?logo=php&logoColor=white)
+![API](https://img.shields.io/badge/REST-API-4c1)
+
+A Laravel-powered REST API for managing procurement workflows (LPBJ), including departments, stores, jobs, vendors, quotations, and purchase orders.
+
+**Quick links:** [Getting Started](#getting-started) · [API Conventions](#api-conventions) · [Authentication](#authentication) · [Endpoints](#endpoints)
+
+---
+
+## Table of Contents
+- [Getting Started](#getting-started)
+- [API Conventions](#api-conventions)
+- [Authentication](#authentication)
+- [Endpoints](#endpoints)
+  - [Departments](#departments)
+  - [Stores](#stores)
+  - [LPBJ](#lpbj)
+  - [Jobs](#jobs)
+  - [Positions](#positions)
+  - [Vendors](#vendors)
+  - [Quotations](#quotations)
+  - [Purchased Orders](#purchased-orders)
+
+---
+
+## Getting Started
+
+### Prerequisites
+- PHP 8.2+
+- Composer
+- Node.js + npm (for frontend tooling)
+- MySQL (or another configured database)
+
+### Installation
+```bash
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+```
+
+### Run the API
+```bash
+php artisan serve
+```
+
+---
+
+## API Conventions
+
+### Base URL
+All endpoints are prefixed with `/api`.
+
+### Authentication
+Use a Bearer token from the login endpoint:
+```
+Authorization: Bearer <token>
+```
+
+### Content Type
+All requests should use:
+```
+Content-Type: application/json
+```
+
+### Pagination
+List endpoints accept `page` and `limit` query parameters and return Laravel-style pagination metadata.
 
 ---
 
 ## Authentication
+
+The following endpoints handle user login and registration.
 
 ### `POST /api/auth/login`
 
@@ -172,7 +242,9 @@ Requires a valid Sanctum token.
 
 ---
 
-## Departments
+## Endpoints
+
+### Departments
 
 ### `GET /api/departments`
 Retrieves a paginated list of departments.
@@ -347,7 +419,7 @@ Deletes a department.
   ```
 ---
 
-## Stores
+### Stores
 
 ### `GET /api/stores`
 Retrieves a paginated list of stores.
@@ -405,7 +477,6 @@ Retrieves a specific store by its ID.
 ```
 
 | Field        | Type    | Validation              |
-
 |--------------|---------|-------------------------|
 | `store_code` | string  | required, string        |
 | `name`       | string  | required, string        |
@@ -479,7 +550,7 @@ Deletes a store.
 
 ---
 
-## LPBJ
+### LPBJ
 
 ### `GET /api/lpbjs`
 Retrieves a paginated list of LPBJs.
@@ -681,7 +752,7 @@ Deletes a LPBJ.
 
 ---
 
-## Jobs
+### Jobs
 
 ### `GET /api/jobs`
 Retrieves a paginated list of jobs.
@@ -776,7 +847,7 @@ Deletes a job.
 
 ---
 
-## Positions
+### Positions
 
 ### `GET /api/positions`
 Retrieves a paginated list of positions.
@@ -861,7 +932,7 @@ Deletes a position.
 
 ---
 
-## Vendors
+### Vendors
 
 ### `GET /api/vendors`
 Retrieves a paginated list of vendors.
@@ -962,7 +1033,7 @@ Deletes a vendor.
   ```
 
 ---
-## Quotations
+### Quotations
 
 ### `GET /api/quotations`
 Retrieves a paginated list of quotations.
@@ -1185,7 +1256,7 @@ Deletes a quotation.
   ```
 ---
 
-## Purchased Orders
+### Purchased Orders
 
 ### `GET /api/purchased-orders`
 Retrieves a paginated list of purchased orders.
